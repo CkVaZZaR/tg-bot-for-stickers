@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common
+# procd-сервис для OpenWrt: /etc/init.d/tg-sticker
+
+START=99
+USE_PROCD=1
+
+APP_DIR=/opt/tg-sticker
+
+start_service() {
+	procd_open_instance
+	procd_set_param command "$APP_DIR/venv/bin/python" "$APP_DIR/bot.py"
+	# Перезапуск при падении (например, нет интернета при загрузке): каждые 10 с, бесконечно
+	procd_set_param respawn 3600 10 0
+	procd_set_param stdout 1
+	procd_set_param stderr 1
+	procd_close_instance
+}
